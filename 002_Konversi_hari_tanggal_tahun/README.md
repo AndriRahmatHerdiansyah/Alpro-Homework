@@ -1,5 +1,7 @@
 menghitung_hari_jarak_kedua_tanggal
+
 {I.S.: user memasukan tanggal pertama dan tanggal kedua}
+
 {F.S.: menampilkan selisih hari kedua tanggal}
 
 Kamus:

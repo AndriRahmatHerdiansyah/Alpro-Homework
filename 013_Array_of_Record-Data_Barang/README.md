@@ -1,6 +1,6 @@
 Daftar_Barang
-{I.S.: user memasukkan kode barang dan stok minimum}
-{F.S.: menampilkan nama barang, harga satuan dan status}
+    {I.S.: user memasukkan kode barang dan stok minimum}
+    {F.S.: menampilkan nama barang, harga satuan dan status}
 
 kamus:
 const
