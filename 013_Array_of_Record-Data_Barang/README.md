@@ -1,19 +1,4 @@
-Daftar_Barang
-    {I.S.: user memasukkan kode barang dan stok minimum}
-    {F.S.: menampilkan nama barang, harga satuan dan status}
-
-kamus:
-const
-    MaksBrg = 3
-type
-    data = record
-        KdBrg, NmBrg, Status <- String
-        Harga, Stok <- integer;
-    endrecord
-    array_data = array[1..MaksBrg] of data
-
-    data_barang <- array_data
-
+{ procedure and function }       
     procedure IsiData(output data : array_data)
     {I.S.: user memasukkan kode barang dan stok minimum}
     {F.S.: menghasilkan kode barang dan stok minimum}
@@ -81,6 +66,25 @@ type
             gotoxy(62, i+4); write(data(i).Status);
         endfor
     end;
+
+{ judul program }
+Daftar_Barang
+{I.S.: user memasukkan kode barang dan stok minimum}
+{F.S.: menampilkan nama barang, harga satuan dan status}
+
+{ kamus global }
+kamus:
+    const
+        MaksBrg = 3
+    type
+        data = record
+            KdBrg, NmBrg, Status, tempKode <- String,
+            Harga, Stok <- integer;
+        endrecord
+        array_data = array[1..MaksBrg] of data
+
+    data_barang <- array_data
+    currLen, statusAman, statusTdkAman <- integer
 
 //algoritma utama
 algoritma:

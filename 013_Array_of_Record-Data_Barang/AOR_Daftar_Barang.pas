@@ -14,8 +14,7 @@ type
     array_data = array[1..MaksBrg] of data;
 var
     data_barang : array_data;
-    currLen: integer;
-    temp : string;
+    currLen, statusAman, statusTdkAman : integer;
 
     function isEmpty(Kode: string): boolean;
     begin
@@ -36,60 +35,57 @@ var
             isInvalid := true
     end;
 
-    // procedure sort;
-    // var
-    //     prevUnsorted, i: integer;
-    //     swapped: boolean;
-        
-    // begin
-    // // using bubble sort algorithm
-    // repeat
-    //     swapped := false;
-    //     prevUnsorted := currlen;
-    //     for i := 1 to prevUnsorted do 
-    //     begin
-    //         if ( data[i].tempKode > data[i + 1].tempKode ) then 
-    //         begin
-    //             temp := data[i].tempKode;
-    //             data[i].tempKode := data[i + 1].tempKode;
-    //             data[i + 1].tempKode := temp;
-    //             swapped := true;
-    //             // writeln('swapped');
-    //         end;
-    //         // writeln('maximum reached');
-    //     end;
-    //     prevUnsorted := prevUnsorted - 1;
-    //     // writeln('mark previous max, as sorted element');
-    // until (swapped);
+    procedure sort;
+    var
+        prevUnsorted, i: integer;
+        swapped: boolean;
+        temp : string;
+    begin
+    // using bubble sort algorithm
+    repeat
+        swapped := false;
+        prevUnsorted := currlen;
+        for i := 1 to prevUnsorted do 
+        begin
+            if (data_barang[i].tempKode > data_barang[i + 1].tempKode ) then 
+            begin
+                temp := data_barang[i].tempKode;
+               data_barang[i].tempKode := data_barang[i + 1].tempKode;
+                data_barang[i + 1].tempKode := temp;
+                swapped := true;
+                // writeln('swapped');
+            end;
+            // writeln('maximum reached');
+        end;
+        prevUnsorted := prevUnsorted - 1;
+        // writeln('mark previous max, as sorted element');
+    until (swapped);
 
-    // for i := 1 to maksbrg do begin
-    //   writeln(tempKode[i]);
-    // end;
-    //end;
+    end;
 
-    // function isEqualInList(Kode: string): boolean;
-    // var
-    //     found: boolean;
-    //     first, mid, last: integer;
-    // begin
-    // // using binary search algorithm
-    // // even though it's doesn't have to.
-    // // due to small element in the list / array
-    // // use linear search instead.
-    //     found := false;
-    //     first := 1; last := currLen;
-    //     while (not found) and (first <= last) {and (isSorted(kode))} do 
-    //     begin
-    //         mid := (first + last) div 2;
-    //         if Kode < tempKode[mid] then
-    //         last := mid - 1
-    //         else if Kode > tempKode[mid] then
-    //         first := mid + 1
-    //         else
-    //             found := true;
-    //     end;
-    //     isEqualInList := found;
-    // end;
+    function isEqualInList(Kode: string): boolean;
+    var
+        found: boolean;
+        first, mid, last: integer;
+    begin
+    // using binary search algorithm
+    // even though it's doesn't have to.
+    // due to small element in the list / array
+    // use linear search instead.
+        found := false;
+        first := 1; last := currLen;
+        while (not found) and (first <= last) {and (isSorted(kode))} do 
+        begin
+            mid := (first + last) div 2;
+            if Kode < data_barang[mid].tempKode then
+            last := mid - 1
+            else if Kode > data_barang[mid].tempKode then
+            first := mid + 1
+            else
+                found := true;
+        end;
+        isEqualInList := found;
+    end;
 
     procedure IsiData(var data:array_data);
     {I.S.: user memasukkan kode barang dan stok minimum}
@@ -123,7 +119,7 @@ var
                 gotoxy(12, i+4); readln(data[i].KdBrg);
             end;
 
-            // cek kode yang salah
+            // validasi kode yang salah
             while (isInvalid(data[i].KdBrg)) do
             begin
                 gotoxy(12, i+5); write('Kode Barang Salah! Ulangi!');
@@ -133,27 +129,21 @@ var
                 gotoxy(12, i+4); readln(data[i].KdBrg);
             end;
 
-            // // cek kode yang sama
-            // while (isEqualInList(data[i].KdBrg)) do begin
-            //     gotoxy(12, i+5); write('Kode Barang Tidak Boleh Sama! Ulangi!');
-            //     readln;
-            //     gotoxy(12, i+5); clreol;
-            //     gotoxy(10, i+4); write('|             |             | RP.          |      |            |');
-            //     gotoxy(12, i+4); readln(data[i].KdBrg);
-            // end;
-
-
-            // while((data[i].KdBrg <> 'BRG01') and (data[i].KdBrg <> 'BRG02') and (data[i].KdBrg <> 'BRG03')) do
-            // begin
-            //    gotoxy(12, i+5); write('Kode Barang Tidak Ada! Ulangi!');
-            //    readln;
-            //    gotoxy(12, i+5); clreol;
-            //    gotoxy(10, i+4); write('|             |             | RP.          |      |            |');
-            //    gotoxy(12, i+4); readln(data[i].KdBrg);
-            // end;
+            // validasi kode yang sama
+            while (isEqualInList(data[i].KdBrg)) do begin
+                gotoxy(12, i+5); write('Kode Barang Tidak Boleh Sama! Ulangi!');
+                readln;
+                gotoxy(12, i+5); clreol;
+                gotoxy(10, i+4); write('|             |             | RP.          |      |            |');
+                gotoxy(12, i+4); readln(data[i].KdBrg);
+            end;
 
             gotoxy(55, i+4); readln(data[i].Stok);            
-
+            
+            data_barang[i].tempKode := data_barang[i].KdBrg;
+            currLen := i;
+            if i > 1 then
+                sort;
         end;
         gotoxy(5,i+5);
         write('---------------------------------------------------------------------');
@@ -187,13 +177,22 @@ var
     {I.S.: Stok Minimum sudah terdefinisi}
     {F.S.: menghasilkan fungsi StatusBrg}
     begin
+
         if(StokMin >= 20) then
-            StatusBrg := 'Aman'
+        begin
+            StatusBrg := 'Aman';
+            statusAman:= statusAman + 1;
+        end
         else
-            StatusBrg := 'Tidak Aman'
+        begin
+            StatusBrg := 'Tidak Aman';
+            statusTdkAman:= statusTdkAman + 1;
+        end;
     end;
 
     function stokMax(data_barang : array_data):integer;
+    {I.S.: Stok Minimum sudah terdefinisi}
+    {F.S.: menghasilkan fungsi stokMax}
     var
         i : integer;
     begin
@@ -206,6 +205,8 @@ var
     end;
 
     function StokMin(data_barang : array_data):integer;
+    {I.S.: Stok Minimum sudah terdefinisi}
+    {F.S.: menghasilkan fungsi StokMin}
     var
         i : integer;
     begin
@@ -214,6 +215,16 @@ var
         begin
             if(data_barang[i].Stok < StokMin) then
                 StokMin := data_barang[i].Stok
+        end;
+    end;
+
+    function persentase(req : integer): real;
+    {I.S.: Stok Minimum sudah terdefinisi}
+    {F.S.: menghasilkan fungsi persentase}
+    begin
+        case(req) of
+        1 : begin persentase := (statusAman / MaksBrg) * 100; end;
+        2 : begin persentase := (statusTdkAman / MaksBrg) * 100; end;
         end;
     end;
 
@@ -232,8 +243,10 @@ var
             gotoxy(44, i+4); write(data[i].Harga);
             gotoxy(62, i+4); write(data[i].Status);
         end;
-        gotoxy(5,9); writeln('Stok tertinggi dari ',MaksBrg,' barang yaitu: ', stokMax(data_barang));
-        gotoxy(5,10); writeln('Stok terendah dari ',MaksBrg,' barang yaitu: ', stokMin(data_barang));
+        gotoxy(5,10); writeln('Stok tertinggi dari ',MaksBrg,' barang yaitu: ', stokMax(data_barang));
+        gotoxy(5,11); writeln('Stok terendah dari ',MaksBrg,' barang yaitu: ', stokMin(data_barang));
+        gotoxy(5,12);writeln('Barang dengan Status Aman yaitu ',statusAman,' barang ( ',persentase(1):0:2,'% )');
+        gotoxy(5,13);writeln('Barang dengan Status Tidak Aman yaitu ',statusTdkAman,' barang ( ',persentase(2):0:2,'% )');
     end;
 
 //algoritma utama
