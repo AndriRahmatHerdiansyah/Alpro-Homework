@@ -104,8 +104,7 @@ var
         
         for i := 1 to MaksBrg do
         begin
-            gotoxy(5, i+4);
-            write('|    |             |             | RP.          |      |            |');
+            gotoxy(5, i+4);write('|    |             |             | RP.          |      |            |');
             gotoxy(7, i+4); write(i);
             gotoxy(12, i+4); readln(data[i].KdBrg);
             
