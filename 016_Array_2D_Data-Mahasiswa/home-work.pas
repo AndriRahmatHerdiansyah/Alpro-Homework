@@ -42,7 +42,7 @@ var
     procedure jumlah_data_mk(var jml_mk: integer);
     begin
     gotoxy(1, 2); write('Masukkan banyaknya matkul    : '); readln(jml_mk);
-    while (jml_mk <= 0) or (jml_mk > MaksKolom) do begin
+    while (jml_mk < 1) or (jml_mk > MaksKolom) do begin
         gotoxy(1, 3);write('Banyaknya data matakuliah hanya antara 1-5');
             readln;
             gotoxy(1, 3); clreol;
