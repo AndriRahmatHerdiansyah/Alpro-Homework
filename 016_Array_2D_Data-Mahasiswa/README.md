@@ -50,10 +50,10 @@
         output('| No | Kode Mata Kuliah | Nama Mata Kuliah | Sks |')
         output('--------------------------------------------------')
         for i :<- 1 to jml_mk do
-            input(data_matkul(i)).kd_mk)
-            input(data_matkul(i)).nm_mk)
-            input(data_matkul(i)).sks)
-            output('|', i ,'|', data_matkul(i)).kd_mk ,'|', data_matkul(i)).nm_mk ,'|', data_matkul(i)).sks ,'|')
+            input(data_matkul(i).kd_mk)
+            input(data_matkul(i).nm_mk)
+            input(data_matkul(i).sks)
+            output('|', i ,'|', data_matkul(i).kd_mk ,'|', data_matkul(i).nm_mk ,'|', data_matkul(i).sks ,'|')
         endfor
     endprocedure
 
