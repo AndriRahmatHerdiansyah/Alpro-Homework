@@ -16,9 +16,9 @@ type
     Buku = array[1..MaksBuku] of DataBuku;
 
 var 
-    BK      : Buku;
-    N, Menu : integer;
-    NP, KS  : string;
+    BK           : Buku;
+    N, Menu      : integer;
+    NP, KS, NmP  : string;
 
     //fungsi login
     function Login(NP, KS : string) : Boolean;
@@ -52,17 +52,19 @@ var
         gotoxy(30, 3); writeln('|============================|');
         gotoxy(30, 4); writeln('|    1. Isi Data Buku        |');
         gotoxy(30, 5); writeln('|    2. Tampil Data Buku     |');
-        gotoxy(30, 6); writeln('|    0. Keluar               |');
-        gotoxy(30, 7); writeln('|============================|');
-        gotoxy(30, 8); writeln('|    Pilihan (1,2,0) :       |');
+        gotoxy(30, 6); writeln('|    3. Cari Data Buku       |');
+        gotoxy(30, 7); writeln('|    4. Cari Pengarang       |');
+        gotoxy(30, 8); writeln('|    0. Keluar               |');
         gotoxy(30, 9); writeln('|============================|');
-        gotoxy(53, 8); readln(Menu);   
+        gotoxy(30, 10); writeln('|  Pilihan (1,2,3,4,0) :     |');
+        gotoxy(30, 11); writeln('|============================|');
+        gotoxy(55, 10); readln(Menu);
         while (menu > 4) or (menu < 0) do
         begin
-            gotoxy(30, 11); write('Menu Salah, Pilihan Hanya 0-2!, Tekan Enter Untuk Ulangi!');
+            gotoxy(15, 13); write('Menu Salah, Pilihan Hanya 0-4!, Tekan Enter Untuk Ulangi!');
             readln;
-            gotoxy(30, 11); clreol;
-            gotoxy(53, 8); clreol; readln(menu); 
+            gotoxy(15, 13); clreol;
+            gotoxy(55, 10); clreol; readln(menu);
         end;     
     end; 
 
@@ -124,6 +126,88 @@ var
         end;
     end;
 
+    // binary search dengan kode terurut secara ascending
+    procedure CariKode(N : integer; BK : Buku);
+    {I.S. : banyaknya data (N), data buku sudah terdefinisi}
+    {F.S. : menampilkan kode buku yang dicari}
+    var
+        Ia, Ib, K : integer;
+        Ketemu    : boolean;
+        Kode      : string;
+    begin
+        write('Kode Buku yang dicari : '); readln(Kode);
+        Ia := 1; // inisialisasi ujung kiri array
+        Ib := N; // inisialisasi ujung kanan array
+        Ketemu := false;
+        while (not Ketemu) and (Ia <= Ib) do
+        begin
+            K := (Ia + Ib) div 2;
+            if (BK[K].KodeBuku = Kode) then
+                Ketemu := true
+            else
+                if (BK[K].KodeBuku < Kode) then
+                    Ia := K + 1
+                else
+                    Ib := K - 1;
+        end;
+        if (Ketemu) then
+        begin
+            clrscr;
+            writeln('Kode Buku      : ', Kode);
+            writeln('Nama Buku      : ', BK[K].NamaBuku);
+            writeln('Tahun          : ', BK[K].Tahun);
+            writeln('Pengarang      : ', BK[K].Pengarang);
+        end
+        else
+            writeln('Kode Buku ',Kode,' Tidak Ada!');
+    end;
+
+    procedure CariPengarang(N : integer; BK : Buku; NmP : string);
+    {I.S. : banyaknya data (N), data buku dan pengarang sudah terdefinisi}
+    {F.S. : menampilkan nama pengarang yang dicari}
+    var
+        i, j, baris : integer;
+        Ketemu      : boolean;
+    begin
+        //sequential search dengan boolean
+        i := 1;
+        Ketemu := false;
+        while (not Ketemu) and (i <= N) do
+        begin
+            if (BK[i].Pengarang = NmP) then
+                Ketemu := true
+            else
+                i := i + 1;
+        end;
+        if (Ketemu) then
+        begin
+            clrscr;
+            gotoxy(33,1); write('DATA BUKU');
+            gotoxy(5,3);  write('Nama Pengarang : ', NmP);
+            gotoxy(5,4);  write('------------------------------------------------');
+            gotoxy(5,5);  write('| No | Kode Buku |    Nama Buku    |   Tahun   |');
+            gotoxy(5,6);  write('------------------------------------------------');
+            baris := 6;
+            for j := 1 to N do
+            begin
+                if (BK[j].Pengarang = NmP) then
+                begin
+                    gotoxy(5, baris + 1); write('|    |           |                 |           |');
+                    gotoxy(7, baris + 1); write(j);
+                    gotoxy(12, baris + 1); write(BK[j].KodeBuku);
+                    gotoxy(24, baris + 1); write(BK[j].NamaBuku);
+                    gotoxy(42, baris + 1); write(BK[j].Tahun);
+                    baris := baris + 1;
+                end;
+            end;
+            gotoxy(5, baris + 1);
+            write('------------------------------------------------');
+            gotoxy(5, baris + 2);write('Tekan Enter Untuk Kembali ke Menu!');
+        end
+        else
+            writeln('Pengarang ',NmP,' Tidak Ada!');
+    end;
+
     //prosedur menampilkan data buku yang sudah terurut
     procedure TampilDataBuku(N : integer; BK : Buku);
     {I. S. : Banyaknya data (N) dan data buku (BK) sudah terdefinisi}
@@ -163,8 +247,48 @@ begin
             case (Menu) of
                 1 : IsiDataBuku(N, BK);
                 2 : begin
-                        UrutDataBuku(N, BK);
-                        TampilDataBuku(N, BK); readln;
+                       if (N = 0) then
+                       begin
+                           clrscr;
+                           writeln('Harap Pilih Menu No. 1 Terlebih Dahulu!');
+                           readln;
+                       end
+                       else
+                       begin
+                           UrutDataBuku(N, BK);
+                           TampilDataBuku(N, BK);
+                           readln;
+                       end;
+                    end;
+                3 : begin
+                       if (N = 0) then
+                       begin
+                           clrscr;
+                           writeln('Harap Pilih Menu No. 1 Terlebih Dahulu!');
+                           readln;
+                       end
+                       else
+                       begin
+                           clrscr;
+                           UrutDataBuku(N, BK);
+                           CariKode(N, BK);
+                           readln;
+                       end;
+                    end;
+                4 : begin
+                       if (N = 0) then
+                       begin
+                           clrscr;
+                           writeln('Harap Pilih Menu No. 1 Terlebih Dahulu!');
+                           readln;
+                       end
+                       else
+                       begin
+                           clrscr;
+                           write('Pengarang Yand Dicari : '); readln(NmP);
+                           CariPengarang(N, BK, NmP);
+                           readln;
+                       end;
                     end;
             end; //endcase
         until (Menu = 0);
