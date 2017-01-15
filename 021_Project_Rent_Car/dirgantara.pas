@@ -16,7 +16,8 @@ Type
         IdCar, CarName  : Str25;
         Manufactur, AC  : Str25;
         Condition, Fuel : Str25;
-        Year, Seats     : Integer;
+        Year            : string;
+        Seats           : Integer;
         Price           : Real;
     End;
 
@@ -44,8 +45,7 @@ Var
     ThisMoment          : TDateTime;
 	i                   : byte;
     N, M, menu          : integer;
-    CarNameSearch       : String;
-    YY,MM,DD            : Word;
+    NP, KS              : string;
 
     procedure OpenDatabase(var carRecArray : ArrayCar);
     var 
@@ -95,32 +95,90 @@ Var
             end;
     end;
 
+    function Login(NP, KS : string) : Boolean;
+    {I.S. : nama pengguna (NP) dan kata sandi (KS) sudah terdefinisi }
+    {I.S. : menghasilkan fungsi login}
+    var
+        i : integer;
+    begin
+        i := 1;
+        while ((NP <> User) or (KS <> Pass)) and (i < 3) do
+        begin
+            gotoxy(1, 3); write('Salah Login');
+            readln; gotoxy(1, 3); clreol; 
+            gotoxy(79, 16); clreol;
+            gotoxy(79, 20); clreol;
+            gotoxy(79, 16); readln(NP); gotoxy(79, 20); readln(KS);
+            i := i + 1;
+        end;
+        if (i <= 3) and (NP = User) and (KS = Pass) then
+            Login := true
+        else
+            Login := false;
+    end;
+
+    procedure LoginProgram;
+    begin
+        Gotoxy(50,10); write('___________________________________________________________');
+        Gotoxy(50,11); Write('|                                                         |');
+        Gotoxy(50,12); Write('|                           MENU LOGIN                    |');
+        Gotoxy(50,13); Write('|                         -------------                   |');
+        Gotoxy(50,14); Write('|                                                         |');
+        Gotoxy(50,15); Write('|                           _________________             |');
+        Gotoxy(50,16); Write('|            Username  :   |                 |            |');
+        Gotoxy(50,17); Write('|                          |_________________|            |');
+        Gotoxy(50,18); Write('|                                                         |');
+        Gotoxy(50,19); Write('|                           _________________             |');
+        Gotoxy(50,20); Write('|            Password :    |                 |            |');
+        Gotoxy(50,21); Write('|                          |_________________|            |');
+        Gotoxy(50,22); Write('|                                                         |');
+        Gotoxy(50,23); Write('|                                -------                  |');
+        Gotoxy(50,24); Write('|                               | Enter |                 |');
+        Gotoxy(50,25); Write('|                                -------                  |');
+        Gotoxy(50,26); Write('|_________________________________________________________|');
+        Gotoxy(79,16); readln(NP);
+        Gotoxy(79,20); readln(KS);
+    end;
+
      procedure MainMenu(var menu : integer);
     {I. S. : user memilih salah satu menu}
     {F. S. : menghasilkan menu yang dipilih}
     begin 
-        writeln(N);   
-        gotoxy(70, 1);  writeln('|============================|');
-        gotoxy(70, 2);  writeln('|          MAIN MENU         |');
-        gotoxy(70, 3);  writeln('|============================|');
-        gotoxy(70, 4);  writeln('|    1. Booking Rental       |');
-        gotoxy(70, 5);  writeln('|    2. Tampil Data Booking  |');
-        gotoxy(70, 6);  writeln('|    3. Invoice Pembayaran   |');
-        gotoxy(70, 7);  writeln('|    4. Isi Data Mobil       |');
-        gotoxy(70, 8);  writeln('|    5. Tampil Data Mobil    |');
-        gotoxy(70, 9);  writeln('|    6. Hapus Data Mobil     |');
-        gotoxy(70, 10); writeln('|    7. Cari Data Mobil      |');
-        gotoxy(70, 11); writeln('|    0. Keluar               |');
-        gotoxy(70, 12); writeln('|============================|');
-        gotoxy(70, 13); writeln('|  Pilihan (1,2,3,4,0) :     |');
-        gotoxy(70, 14); writeln('|============================|');
-        gotoxy(95, 13); readln(menu);
-        while (menu > 7) or (menu < 0) do
+        writeln(N);
+        gotoxy(45, 1);  writeln('                              DIRGANTARA CAR RENTAL');
+        gotoxy(45, 2);  writeln('             Agen sewa mobil di Bandung, Jawa Barat. Cipaganti, Coblong');
+        gotoxy(45, 3);  writeln('Alamat: Jl. Lamping No.7, Cipaganti, Coblong, Kota Bandung, Jawa Barat 40131, Indonesia');
+        gotoxy(45, 4);  writeln('=======================================================================================');
+
+        gotoxy(50, 7);   writeln('|============================================================================|');   
+        gotoxy(50, 8);   writeln('|        * ---------SELAMAT DATANG DI DIRGANTARA CAR RENTAL--------- *       |');
+        gotoxy(50, 9);   writeln('|============================================================================|');
+        gotoxy(50, 10);  writeln('|                                  MAIN MENU                                 |');
+        gotoxy(50, 11);  writeln('|============================================================================|');
+        gotoxy(50, 12);  writeln('|                        1. Booking Rental Mobil                             |');
+        gotoxy(50, 13);  writeln('|                        2. Tampil Data Booking                              |');
+        gotoxy(50, 14);  writeln('|                        3. Invoice Pembayaran                               |');
+        gotoxy(50, 15);  writeln('|                        4. Isi Data Mobil                                   |');
+        gotoxy(50, 16);  writeln('|                        5. Tampil Data Mobil                                |');
+        gotoxy(50, 17);  writeln('|                        6. Hapus Data Mobil                                 |');
+        gotoxy(50, 18);  writeln('|                        7. Cari Data Berdasarkan ID Mobil                   |');
+        gotoxy(50, 19);  writeln('|                        8. Cari Data Berdasarkan Nama Mobil                 |');
+        gotoxy(50, 20);  writeln('|                        9. Cari Data Berdasarkan Tahun Mobil                |');
+        gotoxy(50, 21);  writeln('|                        0. Keluar                                           |');
+        gotoxy(50, 22);  writeln('|============================================================================|');
+        gotoxy(50, 24);  writeln('                        |===============================|                     ');
+        gotoxy(50, 25);  writeln('                        |      Silakan Memilih Menu     |                     ');
+        gotoxy(50, 26);  writeln('                        |===============================|                     ');
+		gotoxy(50, 27);  writeln('                        |                               |                     ');
+		gotoxy(50, 28);  writeln('                        |===============================|                     ');
+          
+        gotoxy(90, 27); readln(menu);
+        while (menu > 9) or (menu < 0) do
         begin
-            gotoxy(15, 16); write('Menu Salah, Pilihan Hanya 0-7!, Tekan Enter Untuk Ulangi!');
+            gotoxy(60, 29); write('Menu Salah, Pilihan Hanya 0-9!, Tekan Enter Untuk Ulangi!');
             readln;
-            gotoxy(15, 16); clreol;
-            gotoxy(95, 13); clreol; readln(menu);
+            gotoxy(60, 29); clreol;
+            gotoxy(90, 27); clreol; readln(menu);
         end;     
     end; 
 
@@ -199,10 +257,8 @@ Var
                 gotoxy(5, j+19); write('Jumlah Hari    :    Hari'); 
                 gotoxy(22, j+19); readln(transaksiRecArray[i+M].ReturnDate);
                 transaksiRecArray[i+M].IdTransaksi := M+1;
-                write(transaksiRecArray[i+M].IdTransaksi);
                 transaksiRecArray[i+M].CarName := Car;
                 transaksiRecArray[i+M].Cost := CostCar;
-                write(transaksiRecArray[i+M].Cost);
 
                 gotoxy(58, 1); writeln('Step[2] - Extras');
                 gotoxy(58, 2); writeln('=================');
@@ -376,8 +432,28 @@ Var
             gotoxy(115, 16);write(cost:0:0);
             readln;
             gotoxy(92, 21);write('Harga Sewa/hari   : Rp. ', transaksiRecArray[xIdTransaksi].Cost:0:0);
-            gotoxy(92, 22);write('Sopir             : Rp. 100000');
-            gotoxy(92, 23);write('Gasoline          : Rp. 50000');
+            if (transaksiRecArray[xIdTransaksi].driver = 'y') and (transaksiRecArray[xIdTransaksi].Gasoline = 'y')  then
+            begin
+                gotoxy(92, 22);write('Sopir             : Rp. 100000');  
+                gotoxy(92, 23);write('Gasoline          : Rp. 50000');  
+            end
+            else if (transaksiRecArray[xIdTransaksi].driver = 'y') then
+            begin
+                gotoxy(92, 22);write('Sopir             : Rp. 100000');  
+                gotoxy(92, 23);write('Gasoline          : Rp. 0');  
+            end
+            else if (transaksiRecArray[xIdTransaksi].Gasoline = 'y') then
+            begin
+                gotoxy(92, 22);write('Sopir             : Rp. 0');
+                gotoxy(92, 23);write('Gasoline          : Rp. 50000');
+            end
+            else
+            begin
+                gotoxy(92, 22);write('Sopir             : Rp. 0'); 
+                gotoxy(92, 23);write('Gasoline          : Rp. 0');
+            end;
+            
+            
             gotoxy(92, 24);write('===================================');
             gotoxy(92, 25);write('Grand Total       : Rp. ', cost:0:0);
             gotoxy(92, 26);write('===================================');
@@ -387,7 +463,7 @@ Var
                 gotoxy(92, 29);write('Maaf uang anda kurang, ulangi!');
                 readln;
                 gotoxy(92, 29); clreol;
-                gotoxy(132, 28); clreol; readln(bayar);
+                gotoxy(116, 28); readln(bayar);
             end;
             kembalian := bayar - cost;
             gotoxy(92, 30);write('Kembalian         : Rp. ', kembalian:0:0);
@@ -527,6 +603,65 @@ Var
         i, j, k    : integer;
         temp       : ArrayCar;
         row        : integer;
+        IdCarSearch       : String;
+    begin
+        gotoxy(60, 1); write('=============================      ========================');
+        gotoxy(60, 2); Write('| Id Mobil Yang Di Cari     |  =>  |                      |');
+        gotoxy(60, 3); write('=============================      ========================'); 
+        
+        gotoxy(97, 2); readln(IdCarSearch);
+        RegexObj := TRegExpr.Create;
+        RegexObj.Expression := IdCarSearch;
+        i := 1;
+        k := 0;
+        while (i <= N) do
+        begin
+            if RegexObj.Exec(carRecArray[i].IdCar) then
+            begin
+                k := k + 1;
+                temp[k] := carRecArray[i];
+            end;
+            i := i + 1;
+        end;
+        
+        if (k > 0) then
+        begin
+            row := 0;
+            for j := 1 to k do
+            begin
+                gotoxy(70,5+row);   write('----------------------------------');
+                gotoxy(70,6+row);   write('|                                |');
+                gotoxy(70,7+row);   write('----------------------------------');
+                gotoxy(70,8+row);   write('|  ID Car    |                   |');
+                gotoxy(70,9+row);   write('|  Year      |                   |');
+                gotoxy(70,10+row);  write('|  Seats     |                   |');
+                gotoxy(70,11+row);  write('|  AC        |                   |');
+                gotoxy(70,12+row);  write('|  Condition |                   |');
+                gotoxy(70,13+row);  write('|  Fuel Type |                   |');
+                gotoxy(70,14+row);  write('|  Price     |  Rp.              |');
+                gotoxy(70,15+row);  write('----------------------------------');
+                    gotoxy(73, 6+row); write(uppercase(temp[j].CarName));
+                    gotoxy(86, 8+row); write(temp[j].IdCar);
+                    gotoxy(86, 9+row); write(temp[j].Year);
+                    gotoxy(86, 10+row); write(temp[j].Seats);
+                    gotoxy(86, 11+row); write(temp[j].AC);
+                    gotoxy(86, 12+row); write(temp[j].Condition);  
+                    gotoxy(86, 13+row); write(temp[j].Fuel);    
+                    gotoxy(90, 14+row); write(temp[j].Price:0:0);
+                row := row + 12;
+            end;
+        end
+        else
+            write('Data not found!');
+        RegexObj.Free;
+    end;
+    
+    procedure SearchNameCar(N : integer; carRecArray : ArrayCar);
+    var
+        i, j, k    : integer;
+        temp       : ArrayCar;
+        row        : integer;
+        CarNameSearch       : String;
     begin
         gotoxy(60, 1); write('=============================      ========================');
         gotoxy(60, 2); Write('|  Merk Mobil Yang Di Cari  |  =>  |                      |');
@@ -578,7 +713,65 @@ Var
             write('Data not found!');
         RegexObj.Free;
     end;
-    
+
+    procedure SearchCarYear(N : integer; carRecArray : ArrayCar);
+    var
+        i, j, k    : integer;
+        temp       : ArrayCar;
+        row        : integer;
+        YearCarSearch : string;
+    begin
+        gotoxy(60, 1); write('=============================      ========================');
+        gotoxy(60, 2); Write('|  Harga Mobil Yang Di Cari |  =>  |                      |');
+        gotoxy(60, 3); write('=============================      ========================'); 
+        
+        gotoxy(97, 2); readln(YearCarSearch);
+        RegexObj := TRegExpr.Create;
+        RegexObj.Expression := YearCarSearch;
+        i := 1;
+        k := 0;
+        while (i <= N) do
+        begin
+            if RegexObj.Exec(carRecArray[i].Year) then
+            begin
+                k := k + 1;
+                temp[k] := carRecArray[i];
+            end;
+            i := i + 1;
+        end;
+        
+        if (k > 0) then
+        begin
+            row := 0;
+            for j := 1 to k do
+            begin
+                gotoxy(70,5+row);   write('----------------------------------');
+                gotoxy(70,6+row);   write('|                                |');
+                gotoxy(70,7+row);   write('----------------------------------');
+                gotoxy(70,8+row);   write('|  ID Car    |                   |');
+                gotoxy(70,9+row);   write('|  Year      |                   |');
+                gotoxy(70,10+row);  write('|  Seats     |                   |');
+                gotoxy(70,11+row);  write('|  AC        |                   |');
+                gotoxy(70,12+row);  write('|  Condition |                   |');
+                gotoxy(70,13+row);  write('|  Fuel Type |                   |');
+                gotoxy(70,14+row);  write('|  Price     |  Rp.              |');
+                gotoxy(70,15+row);  write('----------------------------------');
+                    gotoxy(73, 6+row); write(uppercase(temp[j].CarName));
+                    gotoxy(86, 8+row); write(temp[j].IdCar);
+                    gotoxy(86, 9+row); write(temp[j].Year);
+                    gotoxy(86, 10+row); write(temp[j].Seats);
+                    gotoxy(86, 11+row); write(temp[j].AC);
+                    gotoxy(86, 12+row); write(temp[j].Condition);  
+                    gotoxy(86, 13+row); write(temp[j].Fuel);    
+                    gotoxy(90, 14+row); write(temp[j].Price:0:0);
+                row := row + 12;
+            end;
+        end
+        else
+            write('Data not found!');
+        RegexObj.Free;
+    end;
+
     procedure ShowDataCar(N : integer; carRecArray : ArrayCar);
     begin
         clrscr;
@@ -610,6 +803,11 @@ Var
     end;
 
 Begin
+textbackground(9);
+clrscr;
+LoginProgram;
+if (Login(NP, KS)) then //login sukses
+begin
 repeat
     OpenDatabase(carRecArray);
     close(carRecFile);
@@ -650,7 +848,19 @@ repeat
             clrscr;
             SearchIdCar(N, carRecArray); readln;
         end;
+        8 : begin
+            clrscr;
+            SearchNameCar(N, carRecArray); readln;
+        end;
+        9 : begin
+            clrscr;
+            SearchCarYear(N, carRecArray); readln;
+        end;
     end;
 until (menu = 0);
-
+end
+else // 3 kali salah login
+begin
+    write('Maaf, Sudah 3 kali salah Login!'); readln;
+end;
 End.
